@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tesla Cybertruck | 3D Experience</title>
+  <style>
+    /* Global Styles */
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #0c0c0d;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    #hero {
+      height: 100vh;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 50px;
+      background: linear-gradient(135deg, #0c0c0d, #1a1b1c);
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 50%;
+    }
+
+    .hero-content h1 {
+      font-size: 60px;
+      margin: 0;
+    }
+
+    .hero-content p {
+      font-size: 24px;
+      margin: 20px 0;
+    }
+
+    .hero-btn {
+      padding: 15px 30px;
+      background-color: #e62117;
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .hero-btn:hover {
+      background-color: #ff2924;
+    }
+
+    .hero-canvas {
+      width: 50%;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      right: 0;
+      overflow: hidden;
+    }
+
+    #features {
+      background-color: #111;
+      padding: 50px;
+      text-align: center;
+      position: relative;
+    }
+
+    .feature-list {
+      display: flex;
+      justify-content: space-around;
+      padding: 50px 0;
+    }
+
+    .feature-item {
+      width: 30%;
+      background-color: #222;
+      padding: 20px;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .feature-item:hover {
+      transform: translateY(-10px);
+    }
+
+    footer {
+      background-color: #000;
+      padding: 20px;
+      text-align: center;
+    }
+
+    footer p {
+      margin: 0;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section with 3D model -->
+  <section id="hero">
+    <div class="hero-content">
+      <h1>Experience Tesla Cybertruck in 3D</h1>
+      <p>Revolutionary design and unmatched performance. See the Cybertruck like never before.</p>
+      <button class="hero-btn" onclick="scrollToFeatures()">Explore Features</button>
+    </div>
+    <div class="hero-canvas">
+      <canvas id="OBJ_CYBERTRUCk"></canvas> <!-- Canvas for 3D Model -->
+\    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features">
+    <h2>Cybertruck Tech Features</h2>
+    <div class="feature-list">
+      <div class="feature-item">
+        <h3>Exoskeleton</h3>
+        <p>Ultra-Hard 30X Cold-Rolled stainless-steel structural skin for ultimate durability.</p>
+      </div>
+      <div class="feature-item">
+        <h3>Armor Glass</h3>
+        <p>Impact-resistant Tesla Armor Glass is ultra-strong for added protection.</p>
+      </div>
+      <div class="feature-item">
+        <h3>Electric Power</h3>
+        <p>With a powerful all-electric engine, the Cybertruck offers superior performance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>© 2024 Tesla, Inc. All Rights Reserved. Muhammad Daud</p>
+  </footer>
+
+  <!-- Three.js for 3D Model -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- GSAP for Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+  <!-- Custom JavaScript -->
+  <script>
+    // Scroll to Features Section
+    function scrollToFeatures() {
+      const featuresSection = document.getElementById('features');
+      featuresSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Initialize Three.js Scene for 3D Model
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('cybertruckCanvas'), alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Lighting for the model
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(1, 1, 1);
+    scene.add(light);
+
+    const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+    scene.add(ambientLight);
+
+    // Load 3D Model (assuming you'll replace 'cybertruck.glb' with your file)
+    const loader = new THREE.GLTFLoader();
+    loader.load('cybertruck.glb', function(gltf) {
+      const model = gltf.scene;
+      model.scale.set(2, 2, 2);  // Adjust the model size
+      scene.add(model);
+
+      // Animation to rotate the 3D model
+      function animate() {
+        requestAnimationFrame(animate);
+        model.rotation.y += 0.01; // Rotate the model on the y-axis
+        renderer.render(scene, camera);
+      }
+      animate();
+    });
+
+    // Adjust camera position
+    camera.position.z = 5;
+
+    // Responsive resizing of the 3D model
+    window.addEventListener('resize', () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      renderer.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    });
+
+  </script>
+</body>
+</html>
